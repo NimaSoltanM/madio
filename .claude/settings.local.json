@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(npm install)",
+      "Bash(\"D:\\abyss\\n.s insdustries\\madio\\CLAUDE.md.tmp\")",
+      "Bash(npm install:*)",
+      "Bash(set PB_ADMIN_EMAIL=manimanavi801@gmail.com)",
+      "Bash(set PB_ADMIN_PASSWORD=XKewxt4f4WT6tB8)",
+      "Bash(npm run pb:setup:*)",
+      "Bash(PB_ADMIN_EMAIL=manimanavi801@gmail.com PB_ADMIN_PASSWORD=XKewxt4f4WT6tB8 npm run pb:setup:*)",
+      "Bash(PB_ADMIN_EMAIL=manimanavi801@gmail.com PB_ADMIN_PASSWORD=XKewxt4f4WT6tB8 npm run pb:seed:*)",
+      "Bash(PB_ADMIN_EMAIL=manimanavi801@gmail.com PB_ADMIN_PASSWORD=XKewxt4f4WT6tB8 npm run pb:fix-rules:*)",
+      "Bash(npm run pb:fix-users:*)",
+      "Bash(PB_ADMIN_EMAIL=manimanavi801@gmail.com PB_ADMIN_PASSWORD=XKewxt4f4WT6tB8 npm run pb:fix-users:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

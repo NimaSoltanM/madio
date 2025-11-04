@@ -1,0 +1,40 @@
+{
+  "name": ".",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3000",
+    "build": "vite build && tsc",
+    "serve": "vite preview",
+    "test": "vitest run",
+    "pb:setup": "tsx scripts/setup-pocketbase.ts",
+    "pb:seed": "tsx scripts/seed-data.ts",
+    "pb:fix-rules": "tsx scripts/fix-api-rules.ts",
+    "pb:fix-users": "tsx scripts/fix-users-api-rules.ts"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.16",
+    "@tanstack/react-devtools": "^0.7.0",
+    "@tanstack/react-router": "^1.132.0",
+    "@tanstack/react-router-devtools": "^1.132.0",
+    "@tanstack/router-plugin": "^1.132.0",
+    "pocketbase": "^0.26.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.16"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.2.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "jsdom": "^27.0.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.7.2",
+    "vite": "^7.1.7",
+    "vitest": "^3.0.5",
+    "web-vitals": "^5.1.0"
+  }
+}
