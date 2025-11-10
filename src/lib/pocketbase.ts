@@ -52,6 +52,8 @@ export interface Order {
   items: string; // JSON array of order items
   total: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  shippingInfo: string; // JSON object with shipping details
+  paymentMethod: 'cash' | 'card' | 'online';
   created: string;
   updated: string;
 }

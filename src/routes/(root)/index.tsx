@@ -1,9 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { pb } from '@/lib/pocketbase';
 import type { Category, Product } from '@/lib/pocketbase';
-import { Navigation } from '@/components/Navigation';
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/(root)/')({
   loader: async () => {
     // Fetch categories and featured products
     const [categories, products] = await Promise.all([
@@ -27,7 +26,6 @@ function HomePage() {
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-white'>
-      <Navigation activeRoute="home" />
 
       {/* Hero Section */}
       <section className='container mx-auto px-4 py-20 relative overflow-hidden'>

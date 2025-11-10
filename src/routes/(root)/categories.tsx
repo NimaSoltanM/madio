@@ -6,7 +6,7 @@ interface CategoryWithCount extends Category {
   productCount: number;
 }
 
-export const Route = createFileRoute('/categories')({
+export const Route = createFileRoute('/(root)/categories')({
   loader: async () => {
     // Fetch all categories
     const categories = await pb.collection('categories').getFullList<Category>({
@@ -36,73 +36,12 @@ function CategoriesPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-white">
-      {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-8">
-              <Link to="/" className="text-2xl font-bold text-rose-600">
-                مادیو
-              </Link>
-              <div className="hidden md:flex gap-6">
-                <Link
-                  to="/"
-                  className="text-gray-700 hover:text-rose-600 transition"
-                >
-                  خانه
-                </Link>
-                <Link
-                  to="/categories"
-                  className="text-rose-600 font-medium"
-                >
-                  دسته‌بندی‌ها
-                </Link>
-                <Link
-                  to="/products"
-                  className="text-gray-700 hover:text-rose-600 transition"
-                >
-                  محصولات
-                </Link>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link
-                to="/cart"
-                className="relative text-gray-700 hover:text-rose-600 transition"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-                <span className="absolute -top-2 -right-2 bg-rose-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  0
-                </span>
-              </Link>
-              <Link
-                to="/login"
-                className="text-gray-700 hover:text-rose-600 transition"
-              >
-                ورود
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-12 md:py-20 relative overflow-hidden">
         {/* Floating orbs */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-rose-300 to-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float"></div>
-        <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-purple-300 to-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-purple-300 to-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" style={{ animationDelay: "2s" }}></div>
 
         <div className="relative z-10 text-center max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6 animate-fade-in-up">

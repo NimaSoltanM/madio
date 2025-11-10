@@ -1,14 +1,18 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useMatchRoute } from '@tanstack/react-router';
 import { useAuth } from '@/lib/auth';
+import { useCart } from '@/lib/cart';
 import { useState } from 'react';
 
-interface NavigationProps {
-  activeRoute?: 'home' | 'categories' | 'products';
-}
-
-export function Navigation({ activeRoute }: NavigationProps) {
+export function Navigation() {
   const { user, logout } = useAuth();
+  const { totalItems } = useCart();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const matchRoute = useMatchRoute();
+
+  // Automatically detect active route
+  const isHome = matchRoute({ to: '/', fuzzy: false });
+  const isCategories = matchRoute({ to: '/categories', fuzzy: false });
+  const isProducts = matchRoute({ to: '/products', fuzzy: true });
 
   return (
     <nav className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
@@ -22,7 +26,7 @@ export function Navigation({ activeRoute }: NavigationProps) {
               <Link
                 to="/"
                 className={
-                  activeRoute === 'home'
+                  isHome
                     ? 'text-rose-600 font-medium'
                     : 'text-gray-700 hover:text-rose-600 transition'
                 }
@@ -32,7 +36,7 @@ export function Navigation({ activeRoute }: NavigationProps) {
               <Link
                 to="/categories"
                 className={
-                  activeRoute === 'categories'
+                  isCategories
                     ? 'text-rose-600 font-medium'
                     : 'text-gray-700 hover:text-rose-600 transition'
                 }
@@ -42,7 +46,7 @@ export function Navigation({ activeRoute }: NavigationProps) {
               <Link
                 to="/products"
                 className={
-                  activeRoute === 'products'
+                  isProducts
                     ? 'text-rose-600 font-medium'
                     : 'text-gray-700 hover:text-rose-600 transition'
                 }
@@ -70,9 +74,11 @@ export function Navigation({ activeRoute }: NavigationProps) {
                   d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
-              <span className="absolute -top-2 -right-2 bg-rose-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                0
-              </span>
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-rose-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                  {totalItems > 99 ? '99+' : totalItems}
+                </span>
+              )}
             </Link>
 
             {user ? (
@@ -133,7 +139,8 @@ export function Navigation({ activeRoute }: NavigationProps) {
                       <button
                         onClick={() => {
                           logout();
-                          setShowUserMenu(false);
+                          // Hard reload to clear all state
+                          window.location.href = '/';
                         }}
                         className="w-full text-right px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition flex items-center gap-2"
                       >

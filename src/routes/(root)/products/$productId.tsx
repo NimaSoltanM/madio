@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { pb } from '@/lib/pocketbase';
 import type { Product } from '@/lib/pocketbase';
+import { useCart } from '@/lib/cart';
 import { useState, useEffect } from 'react';
 
-export const Route = createFileRoute('/products/$productId')({
+export const Route = createFileRoute('/(root)/products/$productId')({
   loader: async ({ params }) => {
     const { productId } = params;
 
@@ -27,8 +28,10 @@ export const Route = createFileRoute('/products/$productId')({
 function ProductDetailPage() {
   const { product, relatedProducts } = Route.useLoaderData();
   const navigate = useNavigate();
+  const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [showAddedNotification, setShowAddedNotification] = useState(false);
 
   const categoryName = product.expand?.category?.name || 'دسته‌بندی نامشخص';
 
@@ -37,6 +40,12 @@ function ProductDetailPage() {
     if (newQuantity >= 1 && newQuantity <= product.stock) {
       setQuantity(newQuantity);
     }
+  };
+
+  const handleAddToCart = () => {
+    addToCart(product, quantity);
+    setShowAddedNotification(true);
+    setTimeout(() => setShowAddedNotification(false), 3000);
   };
 
   // Show sticky bar on scroll (mobile only)
@@ -53,83 +62,6 @@ function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-white">
-      {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-8">
-              <Link to="/" className="text-2xl font-bold text-rose-600">
-                مادیو
-              </Link>
-              <div className="hidden md:flex gap-6">
-                <Link
-                  to="/"
-                  className="text-gray-700 hover:text-rose-600 transition"
-                >
-                  خانه
-                </Link>
-                <Link
-                  to="/categories"
-                  className="text-gray-700 hover:text-rose-600 transition"
-                >
-                  دسته‌بندی‌ها
-                </Link>
-                <Link
-                  to="/products"
-                  className="text-gray-700 hover:text-rose-600 transition"
-                >
-                  محصولات
-                </Link>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <button className="text-gray-700 hover:text-rose-600 transition">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
-              <Link
-                to="/cart"
-                className="relative text-gray-700 hover:text-rose-600 transition"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-                <span className="absolute -top-2 -right-2 bg-rose-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  0
-                </span>
-              </Link>
-              <Link
-                to="/login"
-                className="text-gray-700 hover:text-rose-600 transition"
-              >
-                ورود
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Breadcrumb */}
       <div className="container mx-auto px-4 py-4 md:py-6">
         <div className="flex items-center gap-2 text-sm">
@@ -266,6 +198,7 @@ function ProductDetailPage() {
               {/* Actions */}
               <div className="space-y-3">
                 <button
+                  onClick={handleAddToCart}
                   disabled={product.stock === 0}
                   className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-4 rounded-xl font-bold text-base md:text-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none flex items-center justify-center gap-2"
                 >
@@ -383,12 +316,30 @@ function ProductDetailPage() {
                   {product.price.toLocaleString('fa-IR')} تومان
                 </p>
               </div>
-              <button className="flex-1 bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 px-4 rounded-xl font-bold text-sm hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2">
+              <button
+                onClick={handleAddToCart}
+                className="flex-1 bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 px-4 rounded-xl font-bold text-sm hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
+              >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 افزودن به سبد
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Added to Cart Notification */}
+      {showAddedNotification && (
+        <div className="fixed top-20 right-4 z-50 animate-fade-in-up">
+          <div className="bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <div>
+              <p className="font-bold">محصول به سبد خرید اضافه شد</p>
+              <p className="text-sm text-green-100">{quantity} عدد {product.name}</p>
             </div>
           </div>
         </div>

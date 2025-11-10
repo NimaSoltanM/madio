@@ -21,7 +21,8 @@ function LoginPage() {
 
     try {
       await pb.collection('users').authWithPassword(email, password);
-      navigate({ to: '/' });
+      // Hard reload to refresh all state
+      window.location.href = '/';
     } catch (err: any) {
       console.error('Login error:', err);
       if (err.status === 400) {
