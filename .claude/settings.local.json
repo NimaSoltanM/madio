@@ -19,7 +19,14 @@
       "Bash(git log:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(node check-user.js:*)",
+      "Bash(dir:*)",
+      "Bash(node scripts/fix-api-rules.js:*)",
+      "Bash(npm run pb:fix-rules:*)",
+      "Bash(npm run pb:set-admin:*)",
+      "Bash(tsx scripts/list-users.ts:*)",
+      "Bash(npx tsx:*)"
     ],
     "deny": [],
     "ask": []

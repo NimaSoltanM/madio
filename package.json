@@ -10,7 +10,8 @@
     "pb:setup": "tsx scripts/setup-pocketbase.ts",
     "pb:seed": "tsx scripts/seed-data.ts",
     "pb:fix-rules": "tsx scripts/fix-api-rules.ts",
-    "pb:fix-users": "tsx scripts/fix-users-api-rules.ts"
+    "pb:fix-users": "tsx scripts/fix-users-api-rules.ts",
+    "pb:set-admin": "tsx scripts/set-user-admin.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.16",

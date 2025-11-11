@@ -9,9 +9,9 @@ import { pb } from '@/lib/pocketbase';
 import { useState } from 'react';
 
 export const Route = createFileRoute('/admin')({
-  beforeLoad: () => {
-    // Check if user is authenticated and is admin
-    if (!pb.authStore.isValid) {
+  beforeLoad: async () => {
+    // Check if user is authenticated
+    if (!pb.authStore.isValid || !pb.authStore.model?.id) {
       throw redirect({
         to: '/login',
         search: {
@@ -20,11 +20,17 @@ export const Route = createFileRoute('/admin')({
       });
     }
 
-    // Check if user is admin (PocketBase admin account)
-    // OR has isSuperuser field in users collection
-    const isAdmin = pb.authStore.isAdmin || pb.authStore.model?.isSuperuser === true;
+    // Fetch user from database and check role
+    try {
+      const user = await pb.collection('users').getOne(pb.authStore.model.id);
 
-    if (!isAdmin) {
+      if (user.role !== 'admin') {
+        throw redirect({
+          to: '/',
+        });
+      }
+    } catch (error) {
+      // If fetch fails or user doesn't have admin role, redirect
       throw redirect({
         to: '/',
       });

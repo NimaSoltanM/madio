@@ -8,7 +8,8 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'user' | 'admin';
+  role?: 'user' | 'admin';
+  isSuperuser?: boolean;
   avatar?: string;
   created: string;
   updated: string;

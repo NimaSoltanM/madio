@@ -18,8 +18,11 @@ async function fixApiRules() {
     await pb.collections.update(categoriesCollection.id, {
       listRule: '',
       viewRule: '',
+      createRule: '@request.auth.id != "" && @request.auth.role = "admin"',
+      updateRule: '@request.auth.id != "" && @request.auth.role = "admin"',
+      deleteRule: '@request.auth.id != "" && @request.auth.role = "admin"',
     });
-    console.log('✅ Categories are now publicly readable');
+    console.log('✅ Categories are publicly readable, admins can CRUD');
 
     // Fix products API rules
     console.log('📦 Updating products API rules...');
@@ -27,8 +30,11 @@ async function fixApiRules() {
     await pb.collections.update(productsCollection.id, {
       listRule: '',
       viewRule: '',
+      createRule: '@request.auth.id != "" && @request.auth.role = "admin"',
+      updateRule: '@request.auth.id != "" && @request.auth.role = "admin"',
+      deleteRule: '@request.auth.id != "" && @request.auth.role = "admin"',
     });
-    console.log('✅ Products are now publicly readable');
+    console.log('✅ Products are publicly readable, admins can CRUD');
 
     // Fix cart_items API rules (authenticated users only)
     console.log('📦 Updating cart_items API rules...');
@@ -51,15 +57,31 @@ async function fixApiRules() {
     try {
       const ordersCollection = await pb.collections.getFirstListItem('name="orders"');
       await pb.collections.update(ordersCollection.id, {
-        listRule: 'user = @request.auth.id',
-        viewRule: 'user = @request.auth.id',
+        listRule: '@request.auth.id != "" && (@request.auth.role = "admin" || user = @request.auth.id)',
+        viewRule: '@request.auth.id != "" && (@request.auth.role = "admin" || user = @request.auth.id)',
         createRule: '@request.auth.id != ""',
-        updateRule: null,
-        deleteRule: null,
+        updateRule: '@request.auth.id != "" && @request.auth.role = "admin"',
+        deleteRule: '@request.auth.id != "" && @request.auth.role = "admin"',
       });
-      console.log('✅ Orders rules updated');
+      console.log('✅ Orders rules updated - admins can manage, users can view their own');
     } catch (e) {
       console.log('⚠️  Orders collection not found, skipping');
+    }
+
+    // Fix users API rules
+    console.log('📦 Updating users API rules...');
+    try {
+      const usersCollection = await pb.collections.getFirstListItem('name="users"');
+      await pb.collections.update(usersCollection.id, {
+        listRule: '@request.auth.id != "" && @request.auth.role = "admin"',
+        viewRule: '@request.auth.id != "" && (@request.auth.role = "admin" || @request.auth.id = id)',
+        createRule: '',
+        updateRule: '@request.auth.id != "" && (@request.auth.role = "admin" || @request.auth.id = id)',
+        deleteRule: '@request.auth.id != "" && @request.auth.role = "admin"',
+      });
+      console.log('✅ Users rules updated - admins can manage, users can view/edit themselves');
+    } catch (e) {
+      console.log('⚠️  Users collection not found, skipping');
     }
 
     console.log('\n🎉 All API rules fixed!');
