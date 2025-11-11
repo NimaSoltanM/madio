@@ -20,7 +20,7 @@ export const Route = createFileRoute('/(root)/dashboard')({
     try {
       // Fetch user's orders
       const orders = await pb.collection('orders').getList<Order>(1, 50, {
-        filter: `user = "${pb.authStore.model?.id}"`,
+        filter: `user = "${pb.authStore.record?.id}"`,
         sort: '-created',
       });
 

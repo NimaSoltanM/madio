@@ -30,7 +30,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadCart = async () => {
       try {
-        const user = pb.authStore.model;
+        const user = pb.authStore.record;
 
         if (user) {
           // User is logged in - load from PocketBase
@@ -127,7 +127,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     const saveCart = async () => {
       try {
-        const user = pb.authStore.model;
+        const user = pb.authStore.record;
 
         if (user) {
           // Save to PocketBase for authenticated users
@@ -158,7 +158,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems(newItems);
 
     // Save to PocketBase if user is logged in
-    const user = pb.authStore.model;
+    const user = pb.authStore.record;
     if (user) {
       try {
         if (existingItem) {
@@ -191,7 +191,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const newItems = items.filter((item) => item.product.id !== productId);
     setItems(newItems);
 
-    const user = pb.authStore.model;
+    const user = pb.authStore.record;
     if (user) {
       try {
         const dbItem = await pb.collection('cart_items').getFirstListItem(
@@ -220,7 +220,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     setItems(newItems);
 
-    const user = pb.authStore.model;
+    const user = pb.authStore.record;
     if (user) {
       try {
         const dbItem = await pb.collection('cart_items').getFirstListItem(
@@ -238,7 +238,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clearCart = async () => {
     setItems([]);
 
-    const user = pb.authStore.model;
+    const user = pb.authStore.record;
     if (user) {
       try {
         const cartItems = await pb.collection('cart_items').getFullList({

@@ -16,12 +16,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check if user is already logged in
-    setUser(pb.authStore.model as User | null);
+    setUser(pb.authStore.record as User | null);
     setIsLoading(false);
 
     // Listen for auth changes
     const unsubscribe = pb.authStore.onChange(() => {
-      setUser(pb.authStore.model as User | null);
+      setUser(pb.authStore.record as User | null);
     });
 
     return () => {

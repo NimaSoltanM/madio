@@ -1,62 +1,115 @@
-import { Link, useMatchRoute } from '@tanstack/react-router';
+import { Link, useMatchRoute, useNavigate } from '@tanstack/react-router';
 import { useAuth } from '@/lib/auth';
 import { useCart } from '@/lib/cart';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { pb } from '@/lib/pocketbase';
+import type { Product } from '@/lib/pocketbase';
 
 export function Navigation() {
   const { user, logout } = useAuth();
   const { totalItems } = useCart();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const matchRoute = useMatchRoute();
+  const navigate = useNavigate();
 
   // Automatically detect active route
   const isHome = matchRoute({ to: '/', fuzzy: false });
   const isCategories = matchRoute({ to: '/categories', fuzzy: false });
   const isProducts = matchRoute({ to: '/products', fuzzy: true });
 
-  return (
-    <nav className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link to="/" className="text-2xl font-bold text-rose-600">
-              مادیو
-            </Link>
-            <div className="hidden md:flex gap-6">
-              <Link
-                to="/"
-                className={
-                  isHome
-                    ? 'text-rose-600 font-medium'
-                    : 'text-gray-700 hover:text-rose-600 transition'
-                }
-              >
-                خانه
-              </Link>
-              <Link
-                to="/categories"
-                className={
-                  isCategories
-                    ? 'text-rose-600 font-medium'
-                    : 'text-gray-700 hover:text-rose-600 transition'
-                }
-              >
-                دسته‌بندی‌ها
-              </Link>
-              <Link
-                to="/products"
-                className={
-                  isProducts
-                    ? 'text-rose-600 font-medium'
-                    : 'text-gray-700 hover:text-rose-600 transition'
-                }
-              >
-                محصولات
-              </Link>
-            </div>
-          </div>
+  // Search products with debounce
+  useEffect(() => {
+    if (searchQuery.trim().length < 2) {
+      setSearchResults([]);
+      return;
+    }
 
-          <div className="flex items-center gap-4">
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const results = await pb.collection('products').getList<Product>(1, 10, {
+          filter: `name ~ "${searchQuery}" || description ~ "${searchQuery}"`,
+          expand: 'category',
+          sort: '-created',
+        });
+        setSearchResults(results.items);
+      } catch (error) {
+        console.error('Search error:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const handleSearchClick = (productId: string) => {
+    setShowSearch(false);
+    setSearchQuery('');
+    navigate({ to: '/products/$productId', params: { productId } });
+  };
+
+  return (
+    <>
+      <nav className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-8">
+              <Link to="/" className="text-2xl font-bold text-rose-600">
+                مادیو
+              </Link>
+              <div className="hidden md:flex gap-6">
+                <Link
+                  to="/"
+                  className={
+                    isHome
+                      ? 'text-rose-600 font-medium'
+                      : 'text-gray-700 hover:text-rose-600 transition'
+                  }
+                >
+                  خانه
+                </Link>
+                <Link
+                  to="/categories"
+                  className={
+                    isCategories
+                      ? 'text-rose-600 font-medium'
+                      : 'text-gray-700 hover:text-rose-600 transition'
+                  }
+                >
+                  دسته‌بندی‌ها
+                </Link>
+                <Link
+                  to="/products"
+                  className={
+                    isProducts
+                      ? 'text-rose-600 font-medium'
+                      : 'text-gray-700 hover:text-rose-600 transition'
+                  }
+                >
+                  محصولات
+                </Link>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              {/* Search Button */}
+              <button
+                onClick={() => setShowSearch(true)}
+                className="text-gray-700 hover:text-rose-600 transition"
+                title="جستجو"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+
+            {/* Cart Button */}
             <Link
               to="/cart"
               className="relative text-gray-700 hover:text-rose-600 transition"
@@ -174,6 +227,111 @@ export function Navigation() {
           </div>
         </div>
       </div>
-    </nav>
+      </nav>
+
+      {/* Search Modal */}
+      {showSearch && (
+        <div className="fixed inset-0 z-[60] flex items-start justify-center pt-20 px-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => {
+              setShowSearch(false);
+              setSearchQuery('');
+            }}
+          ></div>
+
+          {/* Search Content */}
+          <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden">
+            {/* Search Input */}
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center gap-3">
+                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="جستجوی محصولات..."
+                  autoFocus
+                  className="flex-1 text-lg outline-none text-gray-900 placeholder-gray-400"
+                />
+                <button
+                  onClick={() => {
+                    setShowSearch(false);
+                    setSearchQuery('');
+                  }}
+                  className="text-gray-400 hover:text-gray-600 transition"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Search Results */}
+            <div className="max-h-96 overflow-y-auto">
+              {isSearching ? (
+                <div className="p-12 text-center">
+                  <div className="w-12 h-12 border-4 border-rose-200 border-t-rose-500 rounded-full animate-spin mx-auto"></div>
+                  <p className="text-gray-600 mt-4">در حال جستجو...</p>
+                </div>
+              ) : searchQuery.trim().length < 2 ? (
+                <div className="p-12 text-center">
+                  <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <p className="text-gray-500">حداقل 2 حرف برای جستجو وارد کنید</p>
+                </div>
+              ) : searchResults.length === 0 ? (
+                <div className="p-12 text-center">
+                  <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">محصولی یافت نشد</h3>
+                  <p className="text-gray-500">متاسفانه نتیجه‌ای برای جستجوی شما پیدا نشد</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-gray-100">
+                  {searchResults.map((product) => (
+                    <button
+                      key={product.id}
+                      onClick={() => handleSearchClick(product.id)}
+                      className="w-full p-4 hover:bg-rose-50 transition flex items-center gap-4 text-right"
+                    >
+                      {product.images && product.images.length > 0 ? (
+                        <img
+                          src={pb.files.getUrl(product, product.images[0], { thumb: '100x100' })}
+                          alt={product.name}
+                          className="w-16 h-16 object-cover rounded-lg"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                          <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-gray-900 truncate">{product.name}</h3>
+                        <p className="text-sm text-gray-500 line-clamp-1">{product.description}</p>
+                        <p className="text-rose-600 font-semibold mt-1">
+                          {product.price.toLocaleString('fa-IR')} تومان
+                        </p>
+                      </div>
+                      <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

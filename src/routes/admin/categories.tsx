@@ -44,6 +44,7 @@ function CategoriesManagement() {
   const [showModal, setShowModal] = useState(search.action === 'new');
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<CategoryForm>({
@@ -99,12 +100,14 @@ function CategoriesManagement() {
   };
 
   const handleDelete = async (id: string) => {
+    setIsDeleting(true);
     try {
       await pb.collection('categories').delete(id);
       window.location.reload();
     } catch (error) {
       console.error('Error deleting category:', error);
       alert('خطا در حذف دسته‌بندی');
+      setIsDeleting(false);
     }
   };
 
@@ -311,9 +314,10 @@ function CategoriesManagement() {
                   handleDelete(deleteConfirm);
                   setDeleteConfirm(null);
                 }}
-                className="flex-1 bg-red-600 text-white py-3 rounded-xl font-medium hover:bg-red-700 transition"
+                disabled={isDeleting}
+                className="flex-1 bg-red-600 text-white py-3 rounded-xl font-medium hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                حذف
+                {isDeleting ? 'در حال حذف...' : 'حذف'}
               </button>
               <button
                 onClick={() => setDeleteConfirm(null)}
