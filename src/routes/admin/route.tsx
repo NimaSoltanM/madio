@@ -156,14 +156,14 @@ function AdminLayout() {
     <div className='min-h-screen bg-gray-100'>
       {/* Top Header */}
       <header className='bg-white shadow-sm sticky top-0 z-40'>
-        <div className='flex items-center justify-between px-4 md:px-6 py-4'>
-          <div className='flex items-center gap-4'>
+        <div className='flex items-center justify-between px-3 md:px-4 lg:px-6 py-3 md:py-4'>
+          <div className='flex items-center gap-2 md:gap-4'>
             {/* Mobile Menu Button */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className='md:hidden text-gray-600 hover:text-gray-900'>
+              className='md:hidden text-gray-600 hover:text-gray-900 p-1'>
               <svg
-                className='w-6 h-6'
+                className='w-5 h-5 md:w-6 md:h-6'
                 fill='none'
                 stroke='currentColor'
                 viewBox='0 0 24 24'>
@@ -177,10 +177,10 @@ function AdminLayout() {
             </button>
 
             {/* Logo */}
-            <Link to='/admin' className='flex items-center gap-2'>
-              <div className='w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-lg flex items-center justify-center'>
+            <Link to='/admin' className='flex items-center gap-1.5 md:gap-2'>
+              <div className='w-7 h-7 md:w-8 md:h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0'>
                 <svg
-                  className='w-5 h-5 text-white'
+                  className='w-4 h-4 md:w-5 md:h-5 text-white'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'>
@@ -193,21 +193,21 @@ function AdminLayout() {
                 </svg>
               </div>
               <div>
-                <h1 className='text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent'>
+                <h1 className='text-base md:text-lg lg:text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent'>
                   مادیو
                 </h1>
-                <p className='text-xs text-gray-500'>پنل مدیریت</p>
+                <p className='text-[10px] md:text-xs text-gray-500'>پنل مدیریت</p>
               </div>
             </Link>
           </div>
 
-          <div className='flex items-center gap-4'>
+          <div className='flex items-center gap-2 md:gap-4'>
             {/* View Site */}
             <Link
               to='/'
-              className='hidden md:flex items-center gap-2 text-gray-600 hover:text-rose-600 transition text-sm'>
+              className='hidden sm:flex items-center gap-1.5 md:gap-2 text-gray-600 hover:text-rose-600 transition text-xs md:text-sm'>
               <svg
-                className='w-4 h-4'
+                className='w-3.5 h-3.5 md:w-4 md:h-4'
                 fill='none'
                 stroke='currentColor'
                 viewBox='0 0 24 24'>
@@ -224,15 +224,15 @@ function AdminLayout() {
                   d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'
                 />
               </svg>
-              مشاهده سایت
+              <span className='hidden lg:inline'>مشاهده سایت</span>
             </Link>
 
             {/* User Menu */}
-            <div className='flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg'>
-              <div className='w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm font-semibold'>
+            <div className='flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 bg-gray-50 rounded-lg'>
+              <div className='w-7 h-7 md:w-8 md:h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs md:text-sm font-semibold flex-shrink-0'>
                 {pb.authStore.model?.name?.charAt(0).toUpperCase() || 'A'}
               </div>
-              <span className='hidden md:block text-sm font-medium text-gray-700'>
+              <span className='hidden md:block text-xs md:text-sm font-medium text-gray-700 truncate max-w-[100px] lg:max-w-none'>
                 {pb.authStore.model?.name || 'Admin'}
               </span>
             </div>
@@ -241,25 +241,25 @@ function AdminLayout() {
       </header>
 
       <div className='flex'>
+        {/* Overlay for mobile */}
+        {sidebarOpen && (
+          <div
+            className='fixed inset-0 bg-black/50 md:hidden z-30'
+            onClick={() => setSidebarOpen(false)}></div>
+        )}
+
         {/* Sidebar */}
         <aside
-          className={`fixed md:sticky top-0 right-0 h-screen bg-white w-64 shadow-lg transform transition-transform duration-300 z-30 md:translate-x-0 ${
+          className={`fixed md:sticky top-0 right-0 h-screen bg-white w-64 shadow-lg transform transition-transform duration-300 z-40 md:translate-x-0 ${
             sidebarOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
-          style={{ top: '73px' }}>
-          {/* Overlay for mobile */}
-          {sidebarOpen && (
-            <div
-              className='fixed inset-0 bg-black/50 md:hidden -z-10'
-              onClick={() => setSidebarOpen(false)}></div>
-          )}
-
-          <nav className='p-4 space-y-2'>
+          style={{ top: '57px', height: 'calc(100vh - 57px)' }}>
+          <nav className='p-3 md:p-4 space-y-1.5 md:space-y-2 overflow-y-auto h-full'>
             {navItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                className={`flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2.5 md:py-3 rounded-xl transition-all text-sm md:text-base ${
                   item.active
                     ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md'
                     : 'text-gray-700 hover:bg-gray-50'
@@ -270,12 +270,12 @@ function AdminLayout() {
               </Link>
             ))}
 
-            <div className='border-t border-gray-200 my-4 pt-4'>
+            <div className='border-t border-gray-200 my-3 md:my-4 pt-3 md:pt-4'>
               <button
                 onClick={handleLogout}
-                className='flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all w-full'>
+                className='flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2.5 md:py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all w-full text-sm md:text-base'>
                 <svg
-                  className='w-5 h-5'
+                  className='w-4 h-4 md:w-5 md:h-5'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'>
@@ -293,7 +293,7 @@ function AdminLayout() {
         </aside>
 
         {/* Main Content */}
-        <main className='flex-1 p-6'>
+        <main className='flex-1 p-4 md:p-6 lg:p-8 max-w-full overflow-x-hidden'>
           <Outlet />
         </main>
       </div>

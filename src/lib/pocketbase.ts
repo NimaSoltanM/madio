@@ -47,16 +47,36 @@ export interface CartItem {
   updated: string;
 }
 
+export interface OrderItem {
+  productId: string;
+  productName: string;
+  price: number;
+  quantity: number;
+  total: number;
+}
+
+export interface ShippingInfo {
+  fullName: string;
+  phone: string;
+  city: string;
+  postalCode: string;
+  address: string;
+  notes?: string;
+}
+
 export interface Order {
   id: string;
   user: string; // relation to users
-  items: string; // JSON array of order items
+  items: string | OrderItem[]; // JSON array of order items (can be string or already parsed)
   total: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-  shippingInfo: string; // JSON object with shipping details
+  shippingInfo: string | ShippingInfo; // JSON object with shipping details (can be string or already parsed)
   paymentMethod: 'cash' | 'card' | 'online';
   created: string;
   updated: string;
+  expand?: {
+    user?: User;
+  };
 }
 
 // Auto-refresh auth token
