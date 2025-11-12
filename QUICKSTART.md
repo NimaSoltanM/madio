@@ -51,38 +51,29 @@ npm install
    VITE_POCKETBASE_URL=http://127.0.0.1:8090
    ```
 
-### 4. Create Database Collections
+### 4. Complete Database Setup (One Command!)
+
+Run **one command** to do everything:
 
 ```bash
-npm run pb:setup
+npm run pb:setup-all
 ```
 
-This creates:
-- Categories collection
-- Products collection
-- Cart items collection
-- Orders collection
-- User fields (role, name)
+This automatically:
+- ✅ Creates all collections
+- ✅ Sets up user fields
+- ✅ Configures API access rules
+- ✅ Seeds demo data (5 categories + products)
 
-### 5. Seed Demo Data
+**OR** if you prefer step-by-step:
 
 ```bash
-npm run pb:seed
+npm run pb:setup       # Create collections
+npm run pb:fix-rules   # Fix permissions
+npm run pb:seed        # Add demo data
 ```
 
-This adds:
-- 5 product categories
-- 24 sample products
-
-### 6. Fix API Access Rules
-
-```bash
-npm run pb:fix-rules
-```
-
-This sets up proper access permissions for all collections.
-
-### 7. Create User Account & Make Admin
+### 5. Create User Account & Make Admin
 
 1. Start the app:
    ```bash
@@ -106,12 +97,14 @@ This sets up proper access permissions for all collections.
 ## Common Commands
 
 ```bash
-npm run dev              # Start development server
-npm run build            # Build for production
-npm run pb:setup         # Create database collections
-npm run pb:seed          # Add demo data
-npm run pb:fix-rules     # Fix API permissions
+npm run dev                   # Start development server
+npm run build                 # Build for production
+npm run pb:setup-all          # Complete setup (recommended!)
+npm run pb:setup              # Just create collections
+npm run pb:seed               # Just add demo data
+npm run pb:fix-rules          # Just fix permissions
 npm run pb:set-admin <email>  # Make a user admin
+npm run pb:list-users         # List all users
 ```
 
 ## Troubleshooting
@@ -130,9 +123,8 @@ npm run pb:set-admin <email>  # Make a user admin
 
 ### Products or categories not showing
 
-1. Run `npm run pb:seed` again
-2. Run `npm run pb:fix-rules` again
-3. Refresh the browser (F5)
+1. Run `npm run pb:setup-all` again (or `npm run pb:seed` + `npm run pb:fix-rules`)
+2. Refresh the browser (F5)
 
 ### Admin panel not showing
 
