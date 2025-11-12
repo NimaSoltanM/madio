@@ -57,8 +57,8 @@ async function fixApiRules() {
         deleteRule: 'user = @request.auth.id',
       });
       console.log('✅ Cart items rules updated');
-    } catch (e) {
-      console.log('⚠️  Cart items collection not found, skipping');
+    } catch (e: any) {
+      console.log('⚠️  Could not update cart items rules:', e.message || e);
     }
 
     // Fix orders API rules
@@ -73,8 +73,8 @@ async function fixApiRules() {
         deleteRule: '@request.auth.id != "" && @request.auth.role = "admin"',
       });
       console.log('✅ Orders rules updated - admins can manage, users can view their own');
-    } catch (e) {
-      console.log('⚠️  Orders collection not found, skipping');
+    } catch (e: any) {
+      console.log('⚠️  Could not update orders rules:', e.message || e);
     }
 
     // Fix users API rules
@@ -89,8 +89,8 @@ async function fixApiRules() {
         deleteRule: '@request.auth.id != "" && @request.auth.role = "admin"',
       });
       console.log('✅ Users rules updated - admins can manage, users can view/edit themselves');
-    } catch (e) {
-      console.log('⚠️  Users collection not found, skipping');
+    } catch (e: any) {
+      console.log('⚠️  Could not update users rules:', e.message || e);
     }
 
     console.log('\n🎉 All API rules fixed!');
