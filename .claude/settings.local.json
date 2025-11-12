@@ -26,7 +26,15 @@
       "Bash(npm run pb:fix-rules:*)",
       "Bash(npm run pb:set-admin:*)",
       "Bash(tsx scripts/list-users.ts:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(node -e:*)",
+      "Bash(if [ -f .env ])",
+      "Bash(then echo \".env file exists\")",
+      "Bash(cat:*)",
+      "Bash(else echo \".env file does NOT exist\")",
+      "Bash(fi)",
+      "Bash(npm run pb:list-users:*)",
+      "Bash(npm run pb:setup-all:*)"
     ],
     "deny": [],
     "ask": []

@@ -51,29 +51,34 @@ npm install
    VITE_POCKETBASE_URL=http://127.0.0.1:8090
    ```
 
-### 4. Complete Database Setup (One Command!)
+### 4. Create Collections Manually in PocketBase
 
-Run **one command** to do everything:
+**Important:** You must create collections manually through the PocketBase UI.
+
+📖 **See [`MANUAL_SETUP.md`](./MANUAL_SETUP.md) for detailed step-by-step instructions**
+
+Quick summary:
+1. Go to PocketBase Admin: `http://127.0.0.1:8090/_/`
+2. Create 5 collections:
+   - ✅ **categories**
+   - ✅ **products**
+   - ✅ **users** (add `name` and `role` fields)
+   - ✅ **cart_items**
+   - ✅ **orders**
+
+3. For each collection, set up fields and API rules according to `MANUAL_SETUP.md`
+
+### 5. Seed Demo Data
+
+After creating collections manually, seed the data:
 
 ```bash
-npm run pb:setup-all
+npm run pb:seed
 ```
 
-This automatically:
-- ✅ Creates all collections
-- ✅ Sets up user fields
-- ✅ Configures API access rules
-- ✅ Seeds demo data (5 categories + products)
+This adds 5 categories and sample products.
 
-**OR** if you prefer step-by-step:
-
-```bash
-npm run pb:setup       # Create collections
-npm run pb:fix-rules   # Fix permissions
-npm run pb:seed        # Add demo data
-```
-
-### 5. Create User Account & Make Admin
+### 6. Create User Account & Make Admin
 
 1. Start the app:
    ```bash
@@ -99,21 +104,12 @@ npm run pb:seed        # Add demo data
 ```bash
 npm run dev                   # Start development server
 npm run build                 # Build for production
-npm run pb:setup-all          # Complete setup (recommended!)
-npm run pb:setup              # Just create collections
-npm run pb:seed               # Just add demo data
-npm run pb:fix-rules          # Just fix permissions
+npm run pb:seed               # Add demo data
 npm run pb:set-admin <email>  # Make a user admin
 npm run pb:list-users         # List all users
 ```
 
 ## Troubleshooting
-
-### "only admins can perform this action" error
-
-1. Make sure PocketBase is running
-2. Run `npm run pb:fix-rules`
-3. Logout and login again
 
 ### "PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD must be set" error
 
@@ -123,13 +119,17 @@ npm run pb:list-users         # List all users
 
 ### Products or categories not showing
 
-1. Run `npm run pb:setup-all` again (or `npm run pb:seed` + `npm run pb:fix-rules`)
-2. Refresh the browser (F5)
+1. Make sure you created all collections according to `MANUAL_SETUP.md`
+2. Check that all fields exist in each collection
+3. Run `npm run pb:seed` again
+4. Check PocketBase admin panel that data was seeded
+5. Refresh the browser (F5)
 
 ### Admin panel not showing
 
 1. Make sure you ran: `npm run pb:set-admin your@email.com`
-2. Logout and login again
+2. Make sure the `role` field exists in the users collection
+3. Logout and login again
 
 ---
 
