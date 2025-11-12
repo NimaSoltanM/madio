@@ -1,290 +1,237 @@
-Welcome to your new TanStack app! 
+# Madio - فروشگاه آنلاین آرایشی و بهداشتی
 
-# Getting Started
+یک پروژه دمو فروشگاه آنلاین ساخته شده با React، TanStack Router، و PocketBase.
 
-To run this application:
+## ویژگی‌ها
+
+- 🛍️ فروشگاه محصولات آرایشی و بهداشتی
+- 👤 سیستم احراز هویت کاربران
+- 🛒 سبد خرید
+- 📦 مدیریت سفارشات
+- 👨‍💼 پنل مدیریت کامل
+- 📱 طراحی واکنش‌گرا (Responsive)
+- 🌐 پشتیبانی کامل RTL و زبان فارسی
+
+## پیش‌نیازها
+
+قبل از شروع، مطمئن شوید که موارد زیر را نصب کرده‌اید:
+
+- [Node.js](https://nodejs.org/) (نسخه 18 یا بالاتر)
+- [PocketBase](https://pocketbase.io/docs/) (دانلود از سایت رسمی)
+
+## راهنمای نصب و راه‌اندازی
+
+### مرحله 1️⃣: دریافت پروژه
 
 ```bash
+# کلون کردن یا دریافت پروژه
+git clone <repository-url>
+cd madio
+
+# نصب وابستگی‌ها
 npm install
-npm run start
 ```
 
-# Building For Production
+### مرحله 2️⃣: راه‌اندازی PocketBase
 
-To build this application for production:
+1. **دانلود PocketBase:**
+   - از [سایت رسمی PocketBase](https://pocketbase.io/docs/) فایل مناسب سیستم خود را دانلود کنید
+   - فایل zip را استخراج کنید
+
+2. **اجرای PocketBase:**
+   ```bash
+   # Windows
+   ./pocketbase.exe serve
+
+   # Mac/Linux
+   ./pocketbase serve
+   ```
+
+3. **ساخت اکانت ادمین:**
+   - مرورگر خود را باز کنید و به `http://127.0.0.1:8090/_/` بروید
+   - یک اکانت ادمین بسازید (ایمیل و پسورد خود را وارد کنید)
+   - **مهم:** این ایمیل و پسورد را یادداشت کنید!
+
+### مرحله 3️⃣: تنظیم متغیرهای محیطی (.env)
+
+1. **کپی کردن فایل نمونه:**
+   ```bash
+   # Windows (Command Prompt)
+   copy .env.example .env
+
+   # Windows (PowerShell)
+   Copy-Item .env.example .env
+
+   # Mac/Linux
+   cp .env.example .env
+   ```
+
+2. **ویرایش فایل `.env`:**
+   فایل `.env` را باز کنید و اطلاعات ادمین PocketBase خود را وارد کنید:
+   ```env
+   PB_ADMIN_EMAIL=admin@example.com       # ایمیلی که در مرحله 2 ساختید
+   PB_ADMIN_PASSWORD=your_password_here   # پسوردی که در مرحله 2 ساختید
+   VITE_POCKETBASE_URL=http://127.0.0.1:8090
+   ```
+
+### مرحله 4️⃣: ایجاد دیتابیس و Collections
+
+اکنون باید ساختار دیتابیس را بسازیم:
 
 ```bash
+npm run pb:setup
+```
+
+این دستور موارد زیر را انجام می‌دهد:
+- ✅ ایجاد collection برای دسته‌بندی‌ها (categories)
+- ✅ ایجاد collection برای محصولات (products)
+- ✅ ایجاد collection برای سبد خرید (cart_items)
+- ✅ ایجاد collection برای سفارشات (orders)
+- ✅ تنظیم فیلدهای اضافی برای کاربران (users)
+
+### مرحله 5️⃣: وارد کردن داده‌های نمونه
+
+برای تست کردن برنامه، داده‌های نمونه را وارد کنید:
+
+```bash
+npm run pb:seed
+```
+
+این دستور موارد زیر را اضافه می‌کند:
+- 5 دسته‌بندی محصولات
+- 24 محصول نمونه
+
+### مرحله 6️⃣: تنظیم دسترسی‌ها (API Rules)
+
+برای اینکه برنامه به درستی کار کند، باید قوانین دسترسی را تنظیم کنیم:
+
+```bash
+npm run pb:fix-rules
+```
+
+این دستور قوانین دسترسی را برای تمام collections تنظیم می‌کند.
+
+### مرحله 7️⃣: ساخت اکانت کاربری و ادمین کردن آن
+
+1. **اجرای برنامه:**
+   ```bash
+   npm run dev
+   ```
+
+2. **ساخت اکانت کاربری:**
+   - مرورگر خود را باز کنید و به `http://localhost:3000` بروید
+   - روی "ثبت‌نام" کلیک کنید
+   - یک اکانت کاربری بسازید (این اکانت برای ورود به برنامه است، نه پنل PocketBase)
+
+3. **تبدیل کاربر به ادمین:**
+   ```bash
+   # جایگزین کردن your@email.com با ایمیلی که در مرحله 2 وارد کردید
+   npm run pb:set-admin your@email.com
+   ```
+
+4. **خروج و ورود مجدد:**
+   - از اکانت خود خارج شوید (Logout)
+   - دوباره وارد شوید
+   - اکنون باید لینک "پنل مدیریت" را در منو ببینید!
+
+## دستورات پروژه
+
+```bash
+# اجرای برنامه در حالت توسعه (Development)
+npm run dev
+
+# ساخت نسخه نهایی (Production)
 npm run build
-```
 
-## Testing
+# پیش‌نمایش نسخه نهایی
+npm run serve
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
-
-```bash
+# اجرای تست‌ها
 npm run test
+
+# دستورات PocketBase
+npm run pb:setup        # ایجاد collections
+npm run pb:seed         # وارد کردن داده‌های نمونه
+npm run pb:fix-rules    # تنظیم قوانین دسترسی
+npm run pb:set-admin <email>  # تبدیل یک کاربر به ادمین
 ```
 
-## Styling
+## ساختار پروژه
 
-This project uses CSS for styling.
-
-
-
-
-## Routing
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add another a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
+```
+madio/
+├── src/
+│   ├── routes/              # مسیرهای برنامه (File-based routing)
+│   │   ├── __root.tsx      # Layout اصلی
+│   │   ├── index.tsx       # صفحه اصلی
+│   │   ├── products/       # صفحات محصولات
+│   │   ├── (root)/         # صفحات داشبورد کاربر
+│   │   └── admin/          # پنل مدیریت
+│   ├── components/         # کامپوننت‌های قابل استفاده مجدد
+│   ├── lib/               # توابع کمکی و تنظیمات
+│   │   └── pocketbase.ts  # تنظیمات PocketBase
+│   └── styles.css         # استایل‌های اصلی
+├── scripts/               # اسکریپت‌های راه‌اندازی
+│   ├── setup-pocketbase.ts
+│   ├── seed-data.ts
+│   └── ...
+├── .env.example          # نمونه فایل متغیرهای محیطی
+└── package.json
 ```
 
-Then anywhere in your JSX you can use it like so:
+## حل مشکلات رایج
 
-```tsx
-<Link to="/about">About</Link>
-```
+### خطای "only admins can perform this action"
 
-This will create a link that will navigate to the `/about` route.
+اگر این خطا را دیدید:
+1. مطمئن شوید که PocketBase در حال اجرا است (`http://127.0.0.1:8090`)
+2. دستور `npm run pb:fix-rules` را اجرا کنید
+3. از اکانت خود خارج شوید و دوباره وارد شوید
 
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
+### خطای "PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD must be set"
 
-### Using A Layout
+اگر این خطا را دیدید:
+1. مطمئن شوید که فایل `.env` را ساخته‌اید
+2. اطلاعات ادمین PocketBase را در فایل `.env` وارد کرده‌اید
+3. ایمیل و پسورد را به درستی وارد کرده‌اید
 
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
+### محصولات یا دسته‌بندی‌ها نمایش داده نمی‌شوند
 
-Here is an example layout that includes a header:
+1. دستور `npm run pb:seed` را مجدداً اجرا کنید
+2. دستور `npm run pb:fix-rules` را مجدداً اجرا کنید
+3. صفحه مرورگر را رفرش کنید (F5)
 
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+### پنل مدیریت نمایش داده نمی‌شود
 
-import { Link } from "@tanstack/react-router";
+1. مطمئن شوید که کاربر شما به ادمین تبدیل شده است:
+   ```bash
+   npm run pb:set-admin your@email.com
+   ```
+2. از اکانت خود خارج شوید و دوباره وارد شوید
 
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
+## تکنولوژی‌های استفاده شده
 
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
+- **React** - کتابخانه UI
+- **TanStack Router** - مسیریابی مبتنی بر فایل
+- **TypeScript** - Type safety
+- **Tailwind CSS 4** - استایل‌دهی
+- **PocketBase** - بک‌اند و دیتابیس
+- **Vite** - Build tool
 
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
+## توضیحات مهم
 
+⚠️ **این یک پروژه دمو است!**
+- این پروژه برای آموزش و تست ساخته شده است
+- برای استفاده در محیط واقعی (Production) باید امنیت بیشتری اضافه شود
+- پسوردها و اطلاعات حساس را هرگز در کد قرار ندهید
 
-## Data Fetching
+## پشتیبانی
 
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
+اگر مشکلی داشتید:
+1. ابتدا بخش "حل مشکلات رایج" را بخوانید
+2. مطمئن شوید که تمام مراحل را به ترتیب انجام داده‌اید
+3. لاگ‌های خطا را در Console مرورگر یا Terminal چک کنید
 
-For example:
+---
 
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
-});
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
-
-```bash
-npm install @tanstack/react-query @tanstack/react-query-devtools
-```
-
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
-
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-// ...
-
-const queryClient = new QueryClient();
-
-// ...
-
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
-}
-```
-
-You can also add TanStack Query Devtools to the root route (optional).
-
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
-
-Now you can use `useQuery` to fetch your data.
-
-```tsx
-import { useQuery } from "@tanstack/react-query";
-
-import "./App.css";
-
-function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
-
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default App;
-```
-
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
-
-## State Management
-
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
-
-First you need to add TanStack Store as a dependency:
-
-```bash
-npm install @tanstack/store
-```
-
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
-
-Let's check this out by doubling the count using derived state.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
-
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
-
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
-
-export default App;
-```
-
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+ساخته شده با ❤️ برای یادگیری و تست

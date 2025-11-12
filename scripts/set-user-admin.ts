@@ -6,16 +6,31 @@ async function setUserAdmin() {
   try {
     console.log('🔐 Authenticating as admin...');
 
-    const adminEmail = process.env.PB_ADMIN_EMAIL || 'manimanavi801@gmail.com';
-    const adminPassword = process.env.PB_ADMIN_PASSWORD || 'XKewxt4f4WT6tB8';
+    const adminEmail = process.env.PB_ADMIN_EMAIL;
+    const adminPassword = process.env.PB_ADMIN_PASSWORD;
+
+    if (!adminEmail || !adminPassword) {
+      console.error('❌ Error: PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD must be set in .env file');
+      console.log('\n📝 Steps to fix:');
+      console.log('1. Copy .env.example to .env');
+      console.log('2. Set PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD in .env file');
+      process.exit(1);
+    }
 
     await pb.admins.authWithPassword(adminEmail, adminPassword);
     console.log('✅ Admin authenticated');
 
-    const userId = 'yej90tktrjo8ya0';
+    // Get user email from command line argument
+    const userEmail = process.argv[2];
+    if (!userEmail) {
+      console.error('❌ Error: Please provide user email as argument');
+      console.log('\n📝 Usage: npm run pb:set-admin <user-email>');
+      console.log('   Example: npm run pb:set-admin user@example.com');
+      process.exit(1);
+    }
 
-    console.log(`\n👤 Fetching user ${userId}...`);
-    const user = await pb.collection('users').getOne(userId);
+    console.log(`\n👤 Fetching user with email: ${userEmail}...`);
+    const user = await pb.collection('users').getFirstListItem(`email="${userEmail}"`);
 
     console.log('Current user data:');
     console.log('  - Name:', user.name);

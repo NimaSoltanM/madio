@@ -4,11 +4,19 @@ const pb = new PocketBase('http://127.0.0.1:8090');
 
 async function fixUsersApiRules() {
   try {
+    const adminEmail = process.env.PB_ADMIN_EMAIL;
+    const adminPassword = process.env.PB_ADMIN_PASSWORD;
+
+    if (!adminEmail || !adminPassword) {
+      console.error('❌ Error: PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD must be set in .env file');
+      console.log('\n📝 Steps to fix:');
+      console.log('1. Copy .env.example to .env');
+      console.log('2. Set PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD in .env file');
+      process.exit(1);
+    }
+
     // Authenticate as admin
-    await pb.admins.authWithPassword(
-      process.env.PB_ADMIN_EMAIL!,
-      process.env.PB_ADMIN_PASSWORD!
-    );
+    await pb.admins.authWithPassword(adminEmail, adminPassword);
 
     console.log('✅ Authenticated as admin');
 

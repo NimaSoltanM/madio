@@ -7,8 +7,16 @@ async function seedData() {
     console.log('🌱 Starting database seeding...\n');
     console.log('🔐 Authenticating as admin...');
 
-    const adminEmail = process.env.PB_ADMIN_EMAIL || 'manimanavi801@gmail.com';
-    const adminPassword = process.env.PB_ADMIN_PASSWORD || 'XKewxt4f4WT6tB8';
+    const adminEmail = process.env.PB_ADMIN_EMAIL;
+    const adminPassword = process.env.PB_ADMIN_PASSWORD;
+
+    if (!adminEmail || !adminPassword) {
+      console.error('❌ Error: PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD must be set in .env file');
+      console.log('\n📝 Steps to fix:');
+      console.log('1. Copy .env.example to .env');
+      console.log('2. Set PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD in .env file');
+      process.exit(1);
+    }
 
     await pb.admins.authWithPassword(adminEmail, adminPassword);
     console.log('✅ Admin authenticated\n');
