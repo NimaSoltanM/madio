@@ -279,9 +279,9 @@ function OrdersManagement() {
 
       {/* Order Details Modal */}
       {selectedOrder && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start md:items-center justify-center overflow-y-auto">
-          <div className="bg-white md:rounded-2xl shadow-2xl max-w-3xl w-full md:my-8 min-h-screen md:min-h-0">
-            <div className="p-4 md:p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white md:rounded-t-2xl z-10">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start md:items-center justify-center p-0 md:p-4 overflow-y-auto">
+          <div className="bg-white md:rounded-2xl shadow-2xl max-w-3xl w-full min-h-screen md:min-h-0 md:max-h-[90vh] flex flex-col">
+            <div className="p-4 md:p-6 border-b border-gray-200 flex items-center justify-between flex-shrink-0 sticky top-0 md:static bg-white md:rounded-t-2xl z-10">
               <div className="flex-1 min-w-0 pr-4">
                 <h2 className="text-lg md:text-2xl font-bold text-gray-900 truncate">
                   جزئیات سفارش #{selectedOrder.id.substring(0, 8)}
@@ -300,7 +300,7 @@ function OrdersManagement() {
               </button>
             </div>
 
-            <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+            <div className="p-4 md:p-6 space-y-4 md:space-y-6 overflow-y-auto flex-1">
               {/* Status Update */}
               <div className="bg-gray-50 rounded-xl p-3 md:p-4">
                 <label className="block text-xs md:text-sm font-semibold text-gray-900 mb-2 md:mb-3">
